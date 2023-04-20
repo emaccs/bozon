@@ -13,13 +13,13 @@ const BUILD_START = 'Building Electron application'
 const BUILD_FAILED = 'Failed to build application'
 const BUILD_SUCCEED = 'Building Electron application'
 
-const run = (platform, env, flags) => {
+const run = (platform, env, flags = '') => {
   startSpinner(BUILD_START)
   const config = new WebpackConfig(env, platform, flags).build()
   ensureDirSync(destinationPath('', env))
 
   return Promise.all(buildQueue(config, env, flags))
-    .then(warnings => {
+    .then((warnings) => {
       onBuildSuccess(config, env, warnings)
     })
     .catch(onBuildError)
@@ -33,20 +33,20 @@ const onBuildSuccess = (config, env, warnings) => {
   }
 }
 
-const onBuildError = error => {
+const onBuildError = (error) => {
   stopSpinner(BUILD_FAILED, false)
   log(chalk.grey(inspect(error)))
   process.stdin.end()
   process.kill(process.pid)
 }
 
-const onBuildWarnings = warnings => {
-  warnings.forEach(item => {
+const onBuildWarnings = (warnings) => {
+  warnings.forEach((item) => {
     if (item) warn(item)
   })
 }
 
-const buildQueue = (config, env) => {
+const buildQueue = (config, env, flags = '') => {
   return [
     buildHTML(sourcePath('renderer'), destinationPath('renderer', env)),
     buildManifest(source('package.json'), destinationPath('package.json', env)),

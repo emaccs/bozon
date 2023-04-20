@@ -1,6 +1,6 @@
 module.exports = {
   renderer: {
-    entry: './src/renderer/javascripts/index.js'
+    entry: './src/renderer/javascripts/index.ts'
   },
   preload: {
     entry: './src/preload/index.js'

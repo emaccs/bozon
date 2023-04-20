@@ -1,3 +1,5 @@
+import { app } from './setup'
+
 describe('application launch', () => {
   beforeEach(() => app.start())
 

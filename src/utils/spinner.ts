@@ -1,19 +1,12 @@
 import chalk from 'chalk'
 import readline from 'readline'
 
-const FRAMES = [
-  '⣾',
-  '⣽',
-  '⣻',
-  '⢿',
-  '⡿',
-  '⣟',
-  '⣯',
-  '⣷'
-]
+const FRAMES = ['⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷']
 const INTERVAL = 50
 
 export class Spinner {
+  private interval: NodeJS.Timeout | undefined
+
   start(message) {
     process.stdout.write('\x1B[?25l')
     let i = 0
@@ -27,6 +20,7 @@ export class Spinner {
 
   stop(message) {
     clearInterval(this.interval)
+    // @ts-ignore
     readline.clearLine(process.stdout)
     process.stdout.write(`${message}`)
   }

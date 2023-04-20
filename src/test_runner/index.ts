@@ -5,7 +5,7 @@ import Checker from 'utils/checker'
 import { platform, nodeEnv } from 'utils'
 import { log } from 'utils/logger'
 
-const run = path => {
+const run = (path) => {
   Checker.ensure()
   if (!path || path.match(/features/)) {
     return buildAndRun(path)
@@ -15,7 +15,8 @@ const run = path => {
   }
 }
 
-const buildAndRun = path => {
+const buildAndRun = (path) => {
+  // @ts-ignore
   return new Packager(platform(), 'test').build().then(() => {
     log(chalk.bold('Running test suite...'))
     if (!path) {
@@ -25,7 +26,7 @@ const buildAndRun = path => {
   })
 }
 
-const runFeatureTests = path => {
+const runFeatureTests = (path) => {
   const result = spawnSync('npx', ['jest', '-i', path], {
     env: nodeEnv('test'),
     shell: true,
@@ -34,7 +35,7 @@ const runFeatureTests = path => {
   return buildPromise(result.status)
 }
 
-const runUnitTests = path => {
+const runUnitTests = (path) => {
   const result = spawnSync('npx', ['jest', path], {
     env: nodeEnv('test'),
     shell: true,
@@ -50,8 +51,8 @@ const runAllTests = () => {
   ])
 }
 
-const buildPromise = status => {
-  return (status === 0)
+const buildPromise = (status) => {
+  return status === 0
     ? Promise.resolve()
     : Promise.reject(Error('Some tests failed'))
 }

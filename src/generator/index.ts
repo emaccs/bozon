@@ -10,6 +10,10 @@ import Questionnaire from './questionnaire'
 const $ = path.join
 
 export default class Generator {
+  name: any
+  options: any
+  defaults: any
+  questionnaire: Questionnaire
   constructor(name, options) {
     this.name = underscored(name)
     this.options = options
@@ -41,21 +45,31 @@ export default class Generator {
   }
 
   createDirectories() {
-    this.mkdir(this.name)
-    this.mkdir(this.name, 'src')
-    this.mkdir(this.name, 'src', 'main')
-    this.mkdir(this.name, 'src', 'renderer')
-    this.mkdir(this.name, 'src', 'preload')
-    this.mkdir(this.name, 'src', 'renderer', 'images')
-    this.mkdir(this.name, 'src', 'renderer', 'stylesheets')
-    this.mkdir(this.name, 'src', 'renderer', 'javascripts')
-    this.mkdir(this.name, 'config')
-    this.mkdir(this.name, 'config', 'environments')
-    this.mkdir(this.name, 'config', 'platforms')
-    this.mkdir(this.name, 'resources')
-    this.mkdir(this.name, 'test')
-    this.mkdir(this.name, 'test', 'units')
-    this.mkdir(this.name, 'test', 'features')
+    const dirs: (string | string[])[] = [
+      this.name,
+      [this.name, 'src'],
+      [this.name, 'src', 'main'],
+      [this.name, 'src', 'renderer'],
+      [this.name, 'src', 'preload'],
+      [this.name, 'src', 'renderer', 'images'],
+      [this.name, 'src', 'renderer', 'stylesheets'],
+      [this.name, 'src', 'renderer', 'javascripts'],
+      [this.name, 'config'],
+      [this.name, 'config', 'environments'],
+      [this.name, 'config', 'platforms'],
+      [this.name, 'resources'],
+      [this.name, 'test'],
+      [this.name, 'test', 'units'],
+      [this.name, 'test', 'features']
+    ]
+
+    dirs.forEach((dir) => {
+      if (typeof dir === 'string') {
+        this.mkdir(dir)
+      } else {
+        this.mkdir(...dir)
+      }
+    })
   }
 
   async getVersions() {
@@ -122,7 +136,9 @@ export default class Generator {
 
   installPackages() {
     if (!this.options.skipInstall) {
-      console.log(`  Running ${chalk.cyan(this.defaults.packageManager + ' install')}..`)
+      console.log(
+        `  Running ${chalk.cyan(this.defaults.packageManager + ' install')}..`
+      )
       childProcess.spawnSync(this.defaults.packageManager, ['install'], {
         cwd: './' + this.name,
         shell: true,
@@ -133,10 +149,10 @@ export default class Generator {
     }
   }
 
-  mkdir() {
+  mkdir(...dirs: string[]) {
     try {
-      return fs.mkdirSync($.apply(this, arguments))
-    } catch (err) {
+      return fs.mkdirSync($.apply(this, dirs))
+    } catch (err: any) {
       console.log(`\n ${chalk.red(err.message)} \n`)
       process.exit(0)
     }
@@ -149,7 +165,7 @@ export default class Generator {
     console.log('  ' + chalk.green('create') + ' ' + dest)
   }
 
-  copyTpl(src, dest, data) {
+  copyTpl(src: string, dest: string, data?: object) {
     if (typeof data === 'undefined') {
       data = {}
     }

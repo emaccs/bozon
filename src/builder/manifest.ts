@@ -1,8 +1,8 @@
 import { readFileSync, writeFile } from 'fs'
 
-export const buildManifest = (source, destination) => {
+export const buildManifest = (source: string, destination: string) => {
   return new Promise((resolve, reject) => {
-    const json = JSON.parse(readFileSync(source))
+    const json = JSON.parse(readFileSync(source, 'utf8'))
     const settings = {
       name: json.name,
       version: json.version,

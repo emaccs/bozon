@@ -1,11 +1,11 @@
-import { app } from 'electron'
+import { BrowserWindow, app } from 'electron'
 import fs from 'fs'
 import path from 'path'
 
-const browserWindows = []
+const browserWindows: BrowserWindow[] = []
 
 const reloadRenderer = () => {
-  Object.values(browserWindows).forEach(window => {
+  Object.values(browserWindows).forEach((window) => {
     if (window) window.webContents.reloadIgnoringCache()
   })
 }

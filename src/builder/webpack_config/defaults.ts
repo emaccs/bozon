@@ -14,11 +14,7 @@ export const mainDefaults = (mode, env) => {
       __filename: false
     },
     resolve: {
-      modules: [
-        'node_modules',
-        './src/main',
-        './resources'
-      ]
+      modules: ['node_modules', './src/main', './resources']
     },
     plugins: []
   }
@@ -28,10 +24,10 @@ export const rendererDefaults = (mode, env) => {
   return {
     mode,
     target: 'electron-renderer',
-    entry: './src/renderer/javascripts/index.js',
+    entry: './src/renderer/javascripts/index.tsx',
     output: {
       path: destinationPath('renderer', env),
-      filename: 'index.js'
+      filename: 'index.tsx'
     },
     module: {
       rules: [

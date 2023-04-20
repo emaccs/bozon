@@ -10,9 +10,9 @@ export const create = (name, command) => {
   new Generator(name, options).generate()
 }
 
-export const start = command => {
+export const start = (command) => {
   restoreCursorOnExit()
-  const params = {
+  const params: { options: string[]; flags: { reload: boolean } } = {
     options: [],
     flags: {
       reload: !!command.reload

@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import { isBlank } from 'underscore.string'
 
 export default class Questionnaire {
+  name: any
   constructor(options) {
     this.name = options.name
   }
@@ -14,17 +15,19 @@ export default class Questionnaire {
         name: 'name',
         message: 'What is the name of your app?',
         default: this.name,
-        validate: value => {
+        validate: (value) => {
           return isBlank(value) ? 'You have to provide application name' : true
         }
-      }, {
+      },
+      {
         type: 'input',
         name: 'author',
         message: 'Please specify author name (ex: John Doe):',
-        validate: value => {
+        validate: (value) => {
           return isBlank(value) ? 'You have to provide author name' : true
         }
-      }, {
+      },
+      {
         type: 'list',
         name: 'packageManager',
         message: 'Which package manager do you use?',
@@ -36,10 +39,12 @@ export default class Questionnaire {
   prompt(callback) {
     console.log(' ')
     console.log('  Welcome to ' + chalk.cyan('Bozon') + '!')
-    console.log('  You\'re about to start new' + chalk.cyan(' Electron ') + 'application,')
+    console.log(
+      "  You're about to start new" + chalk.cyan(' Electron ') + 'application,'
+    )
     console.log('  but first answer a few questions about your project:')
     console.log(' ')
-    return inquirer.prompt(this.questions()).then(answers => {
+    return inquirer.prompt(this.questions()).then((answers) => {
       callback(answers)
     })
   }

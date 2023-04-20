@@ -9,10 +9,16 @@ import { mainDefaults, rendererDefaults, preloadDefaults } from './defaults'
 const UNIQUENESS_KEYS = ['resolve.modules']
 
 export default class WebpackConfig {
+  env: any
+  platform: any
+  flags: any
+  config: any
+
   constructor(env, platform, flags) {
     this.env = env
     this.platform = platform
     this.flags = flags
+    this.config = {}
     this.localConfig()
   }
 
@@ -53,7 +59,7 @@ export default class WebpackConfig {
 
   injectConfig(configs) {
     const CONFIG = {
-      CONFIG: JSON.stringify(this.settings())
+      global: { CONFIG: JSON.stringify(this.settings()) }
     }
     configs.main.plugins.push(new webpack.DefinePlugin(CONFIG))
     configs.preload.plugins.push(new webpack.DefinePlugin(CONFIG))
@@ -68,11 +74,13 @@ export default class WebpackConfig {
   }
 
   mode() {
-    return (this.env === 'development' || this.env === 'test') ? 'development' : 'production'
+    return this.env === 'development' || this.env === 'test'
+      ? 'development'
+      : 'production'
   }
 
   settings() {
-    const json = JSON.parse(fs.readFileSync(source('package.json')))
+    const json = JSON.parse(fs.readFileSync(source('package.json'), 'utf8'))
     const settings = config(this.env, this.platform)
     settings.name = json.name
     settings.version = json.version
@@ -81,8 +89,6 @@ export default class WebpackConfig {
 
   localConfig() {
     const configFile = source('webpack.config.js')
-    this.config = fs.existsSync(configFile)
-      ? __non_webpack_require__(configFile)
-      : {}
+    this.config = fs.existsSync(configFile) ? require(configFile) : {}
   }
 }

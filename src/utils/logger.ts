@@ -1,9 +1,14 @@
 import chalk from 'chalk'
 import { Spinner } from 'utils/spinner'
 
-let spinner = null
+let spinner: Spinner | null = null
 
-const formatMessage = (message, options = {}) => {
+interface FormatMessageOptions {
+  newLineBefore?: boolean
+  skipLineAfter?: boolean
+}
+
+const formatMessage = (message: string, options: FormatMessageOptions = {}) => {
   let string = `[${chalk.cyan('bozon')}] ${message}`
   if (options.newLineBefore) {
     string = `\n${string}`
@@ -33,7 +38,7 @@ const stopSpinner = (message, success = true) => {
   } else {
     message = `${chalk.yellow(message)} ${chalk.red('✖')}`
   }
-  spinner.stop(formatMessage(message))
+  spinner?.stop(formatMessage(message))
 }
 
 export { log, warn, startSpinner, stopSpinner }

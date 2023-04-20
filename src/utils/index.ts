@@ -3,9 +3,9 @@ import Config from 'merge-config'
 
 const srcDir = 'src'
 
-export const source = function () {
+export const source = function (...args: string[]): string {
   const prefix = process.cwd()
-  const suffix = path.join.apply(null, arguments)
+  const suffix = path.join.apply(null, args)
   return path.join(prefix, suffix)
 }
 
@@ -23,14 +23,21 @@ export const destinationPath = (suffix, env) => {
   return path.join(process.cwd(), 'builds', env, suffix)
 }
 
-export const isWindows = () => {
-  const { platform } = process
-  return platform === 'windows' || platform === 'win32'
+export const isWindowsPlatform = (platform: NodeJS.Platform | string) => {
+  return platform === 'win32' || platform === 'windows'
 }
 
+export const isWindows = () => {
+  const { platform } = process
+  return isWindowsPlatform(platform)
+}
+
+export const isMacOSPlatform = (platform: NodeJS.Platform | string) => {
+  return platform === 'darwin' || platform === 'macos'
+}
 export const isMacOS = () => {
   const { platform } = process
-  return platform === 'mac' || platform === 'darwin'
+  return isMacOSPlatform(platform)
 }
 
 export const isLinux = () => {

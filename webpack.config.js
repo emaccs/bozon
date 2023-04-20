@@ -3,8 +3,8 @@ const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: {
-    index: path.resolve(__dirname, 'src', 'index.js'),
-    dev: path.resolve(__dirname, 'src', 'dev', 'index.js')
+    index: path.resolve(__dirname, 'src', 'index.ts'),
+    dev: path.resolve(__dirname, 'src', 'dev', 'index.ts')
   },
   mode: 'development',
   target: 'node',
@@ -18,28 +18,27 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   resolve: {
-    modules: ['node_modules', 'src']
+    modules: ['node_modules', 'src'],
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json']
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: /(node_modules)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              [
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
                 '@babel/preset-env',
-                {
-                  targets: {
-                    esmodules: true
-                  }
-                }
+                '@babel/preset-react',
+                '@babel/preset-typescript'
               ]
-            ]
-          }
-        }
+            }
+          },
+          'ts-loader'
+        ]
       }
     ]
   }

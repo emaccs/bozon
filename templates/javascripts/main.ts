@@ -2,15 +2,16 @@
 // code. You can also put them in separate files and require them here.
 import path from 'path'
 import { app, BrowserWindow } from 'electron'
+declare const CONFIG: any
 
 const createWindow = () => {
   // Create the browser window.
-  let win = new BrowserWindow({
-    title: CONFIG.name,
-    width: CONFIG.width,
-    height: CONFIG.height,
+  let win: BrowserWindow | null = new BrowserWindow({
+    title: global.CONFIG.name,
+    width: global.CONFIG.width,
+    height: global.CONFIG.height,
     webPreferences: {
-      worldSafeExecuteJavaScript: true,
+      contextIsolation: true,
       preload: path.join(app.getAppPath(), 'preload', 'index.js')
     }
   })
@@ -20,8 +21,9 @@ const createWindow = () => {
 
   // send data to renderer process
   win.webContents.on('did-finish-load', () => {
+    if (!win) return
     win.webContents.send('loaded', {
-      appName: CONFIG.name,
+      appName: global.CONFIG.name,
       electronVersion: process.versions.electron,
       nodeVersion: process.versions.node,
       chromiumVersion: process.versions.chrome

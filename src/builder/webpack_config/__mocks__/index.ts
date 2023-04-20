@@ -1,4 +1,5 @@
 const WebpackConfig = jest.fn()
+// @ts-ignore
 WebpackConfig.build = jest.fn(() => {
   return {
     renderer: {
@@ -14,6 +15,7 @@ WebpackConfig.build = jest.fn(() => {
 })
 
 WebpackConfig.mockReturnValue({
+  // @ts-ignore
   build: WebpackConfig.build
 })
 
